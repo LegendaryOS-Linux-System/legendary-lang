@@ -1,0 +1,18 @@
+import std::io
+import std::cli
+import extern "libdnf5/libdnf5.h" as dnf
+
+--- Struktura reprezentująca instalator pakietów LPM.
+struct PackageInstaller {
+    context: dnf.Base
+}
+
+fn main(args: List<string>) {
+    let app = cli.App(name: "lpm", version: "1.0.0")
+
+    -- Wykorzystanie zaimportowanej biblioteki C (libdnf)
+    let context = dnf.Base()
+    context.init()
+
+    io.msg("LPM zainicjalizowany pomyslnie.")
+}
