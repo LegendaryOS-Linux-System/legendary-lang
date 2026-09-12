@@ -125,6 +125,20 @@ Token Lexer::lexChar() {
     return Token{TokenKind::CharLiteral, text, startLine, startCol};
 }
 
+// `$ ... $` — inline shell literal. Zawartość jest surowym tekstem;
+// segmenty `{ident}` są interpolowane w Parserze/Codegenie (tak jak w stringach).
+Token Lexer::lexShellLiteral() {
+    int startLine = line_, startCol = col_;
+    advance(); // pierwszy '$'
+    std::string content;
+    while (!atEnd() && peek() != '$') {
+        content += advance();
+    }
+    if (atEnd()) error("niezamkniety literal shellowy $ ... $");
+    advance(); // zamykajacy '$'
+    return Token{TokenKind::ShellLiteral, content, startLine, startCol};
+}
+
 Token Lexer::lexSymbol() {
     int startLine = line_, startCol = col_;
     char c = advance();
@@ -227,6 +241,11 @@ std::vector<Token> Lexer::tokenize() {
 
         if (c == '\'') {
             tokens.push_back(lexChar());
+            continue;
+        }
+
+        if (c == '$') {
+            tokens.push_back(lexShellLiteral());
             continue;
         }
 
