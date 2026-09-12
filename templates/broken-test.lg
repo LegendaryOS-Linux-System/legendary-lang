@@ -1,0 +1,12 @@
+import std::io
+
+fn add(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+fn main(args: List<string>) {
+    let x = 5
+    io.msg("wartosc: {y}")       -- literowka: 'y' zamiast 'x' - powinno zlapac
+    let z = add(1, 2, 3)          -- zla liczba argumentow - powinno zlapac
+    x = 10                        -- przypisanie bez 'mut' - powinno zlapac
+}
