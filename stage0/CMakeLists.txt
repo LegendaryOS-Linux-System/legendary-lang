@@ -12,10 +12,22 @@ endif()
 add_executable(lgc
     src/main.cpp
     src/lexer.cpp
+    src/parser.cpp
+    src/codegen.cpp
+    src/typecheck.cpp
 )
-
 target_include_directories(lgc PRIVATE src)
 target_compile_options(lgc PRIVATE -Wall -Wextra)
 
-# Docelowo: lpm (Legendary Package Manager) jako osobny target w tym samym repo,
-# na razie skupiamy się na `lgc` (transpiler .lg -> C++20).
+add_executable(lpm
+    src/lpm_main.cpp
+    src/lexer.cpp
+    src/config_parser.cpp
+)
+target_include_directories(lpm PRIVATE src)
+target_compile_options(lpm PRIVATE -Wall -Wextra)
+
+# Runtime dolaczany przez kod wygenerowany przez lgc (`#include "lg_runtime.hpp"`).
+# lpm kopiuje go do build/target/ przy kompilacji projektu uzytkownika.
+install(FILES runtime/lg_runtime.hpp DESTINATION share/legendary-lang/runtime)
+
